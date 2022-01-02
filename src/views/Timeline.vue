@@ -123,11 +123,14 @@ export default {
 		]),
 		// list of loaded medias
 		fileList() {
-			return this.timeline.map((fileId) => this.files[fileId])
+			return this.timeline
+				.map((fileId) => this.files[fileId])
+				.filter((file) => !!file)
 		},
 		// list of displayed content in the grid (titles + medias)
 		contentList() {
-			/** The goal of this flat map is to return an array of images separated by titles (months)
+			/**
+			 * The goal of this flat map is to return an array of images separated by titles (months)
 			 * ie: [{month1}, {image1}, {image2}, {month2}, {image3}, {image4}, {image5}]
 			 * First we get the current month+year of the image
 			 * We compare it to the previous image month+year
@@ -202,7 +205,8 @@ export default {
 	},
 
 	methods: {
-		/** Return next batch of data depending on global offset
+		/**
+		 * Return next batch of data depending on global offset
 		 *
 		 * @param {boolean} doReturn Returns a Promise with the list instead of a boolean
 		 * @return {Promise<boolean>} Returns a Promise with a boolean that stops infinite loading

@@ -78,6 +78,7 @@ import imgplaceholder from './assets/image.svg'
 import videoplaceholder from './assets/video.svg'
 import isMapsInstalled from './services/IsMapsInstalled'
 import areTagsInstalled from './services/AreTagsInstalled'
+import searchNomedia from './services/NomediaSearch'
 
 export default {
 	name: 'Photos',
@@ -102,7 +103,7 @@ export default {
 		}
 	},
 
-	beforeMount() {
+	async beforeMount() {
 		if ('serviceWorker' in navigator) {
 			// Use the window load event to keep the page load performant
 			window.addEventListener('load', () => {
@@ -118,6 +119,9 @@ export default {
 		} else {
 			console.debug('Service Worker is not enabled on this browser.')
 		}
+
+		const files = await searchNomedia({ full: true })
+		this.$store.dispatch('setNomediaFiles', files)
 	},
 
 	beforeDestroy() {

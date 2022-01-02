@@ -17,11 +17,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 import Vue from 'vue'
 
 const state = {
 	files: {},
+	nomediaPaths: {},
 }
 
 const mutations = {
@@ -33,6 +35,9 @@ const mutations = {
 	 */
 	updateFiles(state, files) {
 		files.forEach(file => {
+			if (Object.keys(state.nomediaPaths).some(nomediaPath => file.filename.indexOf(nomediaPath) === 0)) {
+				return
+			}
 			if (file.fileid >= 0) {
 				Vue.set(state.files, file.fileid, file)
 			}
@@ -56,10 +61,29 @@ const mutations = {
 			Vue.set(state.files[fileid], 'folders', subfolders)
 		}
 	},
+
+	/**
+	 * Set list of all .nomedia/.noimage files
+	 *
+	 * @param {object} context the store mutations
+	 * @param {Array} files list of files
+	 */
+	setNomediaFiles(context, files) {
+		files.forEach(file => {
+			let path
+			if (file.filename.includes('.nomedia')) {
+				path = file.filename.substr(0, file.filename.indexOf('.nomedia'))
+			} else if (file.filename.includes('.noimage')) {
+				path = file.filename.substr(0, file.filename.indexOf('.noimage'))
+			}
+			Vue.set(state.nomediaPaths, path, file)
+		})
+	},
 }
 
 const getters = {
 	files: state => state.files,
+	nomediaPaths: state => Object.keys(state.nomediaPaths),
 }
 
 const actions = {
@@ -86,6 +110,16 @@ const actions = {
 	 */
 	appendFiles(context, files = []) {
 		context.commit('updateFiles', files)
+	},
+
+	/**
+	 * Set list of all .nomedia/.noimage files
+	 *
+	 * @param {object} context the store mutations
+	 * @param {Array} files list of files
+	 */
+	setNomediaFiles(context, files) {
+		context.commit('setNomediaFiles', files)
 	},
 }
 
