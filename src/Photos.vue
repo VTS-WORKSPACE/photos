@@ -65,6 +65,7 @@
 <script>
 import { getCurrentUser } from '@nextcloud/auth'
 import { generateUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
 
 import Content from '@nextcloud/vue/dist/Components/Content'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
@@ -78,7 +79,6 @@ import imgplaceholder from './assets/image.svg'
 import videoplaceholder from './assets/video.svg'
 import isMapsInstalled from './services/IsMapsInstalled'
 import areTagsInstalled from './services/AreTagsInstalled'
-import searchNomedia from './services/NomediaSearch'
 
 export default {
 	name: 'Photos',
@@ -120,8 +120,8 @@ export default {
 			console.debug('Service Worker is not enabled on this browser.')
 		}
 
-		const files = await searchNomedia({ full: true })
-		this.$store.dispatch('setNomediaFiles', files)
+		const files = loadState('photos', 'nomedia-paths', [])
+		this.$store.dispatch('setNomediaPaths', files)
 	},
 
 	beforeDestroy() {

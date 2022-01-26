@@ -23,7 +23,7 @@ import Vue from 'vue'
 
 const state = {
 	files: {},
-	nomediaPaths: {},
+	nomediaPaths: [],
 }
 
 const mutations = {
@@ -35,7 +35,7 @@ const mutations = {
 	 */
 	updateFiles(state, files) {
 		files.forEach(file => {
-			if (Object.keys(state.nomediaPaths).some(nomediaPath => file.filename.indexOf(nomediaPath) === 0)) {
+			if (state.nomediaPaths.some(nomediaPath => file.filename.startsWith(nomediaPath))) {
 				return
 			}
 			if (file.fileid >= 0) {
@@ -65,25 +65,17 @@ const mutations = {
 	/**
 	 * Set list of all .nomedia/.noimage files
 	 *
-	 * @param {object} context the store mutations
-	 * @param {Array} files list of files
+	 * @param {object} state the store mutations
+	 * @param {Array} paths list of files
 	 */
-	setNomediaFiles(context, files) {
-		files.forEach(file => {
-			let path
-			if (file.filename.includes('.nomedia')) {
-				path = file.filename.substr(0, file.filename.indexOf('.nomedia'))
-			} else if (file.filename.includes('.noimage')) {
-				path = file.filename.substr(0, file.filename.indexOf('.noimage'))
-			}
-			Vue.set(state.nomediaPaths, path, file)
-		})
+	setNomediaPaths(state, paths) {
+		state.nomediaPaths = paths
 	},
 }
 
 const getters = {
 	files: state => state.files,
-	nomediaPaths: state => Object.keys(state.nomediaPaths),
+	nomediaPaths: state => state.nomediaPaths,
 }
 
 const actions = {
@@ -116,10 +108,10 @@ const actions = {
 	 * Set list of all .nomedia/.noimage files
 	 *
 	 * @param {object} context the store mutations
-	 * @param {Array} files list of files
+	 * @param {Array} paths list of files
 	 */
-	setNomediaFiles(context, files) {
-		context.commit('setNomediaFiles', files)
+	setNomediaPaths(context, paths) {
+		context.commit('setNomediaPaths', paths)
 	},
 }
 
