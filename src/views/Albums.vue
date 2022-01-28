@@ -43,8 +43,7 @@
 		</EmptyContent>
 
 		<div v-else class="grid-container">
-			<VirtualGrid
-				ref="virtualgrid"
+			<VirtualGrid ref="virtualgrid"
 				:items="contentList"
 				:get-column-count="() => gridConfig.count"
 				:get-grid-gap="() => gridConfig.gap" />
@@ -251,7 +250,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../mixins/GridSizes.scss';
+@import '../mixins/GridSizes';
 
 .grid-container {
 	@include grid-sizes using ($marginTop, $marginW) {
