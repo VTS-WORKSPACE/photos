@@ -1,4 +1,4 @@
-all: dev-setup lint build-js-production test
+all: dev-setup lint build-js-production release
 
 # Dev env management
 dev-setup: clean clean-dev npm-init
@@ -50,3 +50,5 @@ clean:
 clean-dev:
 	rm -rf node_modules
 
+release:
+	zip -r release.zip . -x "node_modules/*" "tests/*" "vendor/*"
